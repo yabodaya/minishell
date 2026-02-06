@@ -6,7 +6,7 @@
 /*   By: yabodaya <yabodaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/23 14:39:44 by yabodaya          #+#    #+#             */
-/*   Updated: 2026/01/30 14:40:49 by yabodaya         ###   ########.fr       */
+/*   Updated: 2026/02/06 11:35:54 by yabodaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	execute(t_cmd	*cmd, char ***envp)
 		return ;
 	if (!cmd->next)
 	{
-		if (cmd->is_builtin)
+		if (isbuiltin(cmd))
 			exec_builtin(cmd, envp);
 		else
 			exec_cmd(cmd, envp);

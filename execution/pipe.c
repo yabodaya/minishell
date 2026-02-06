@@ -6,7 +6,7 @@
 /*   By: yabodaya <yabodaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/30 13:45:10 by yabodaya          #+#    #+#             */
-/*   Updated: 2026/01/30 16:02:50 by yabodaya         ###   ########.fr       */
+/*   Updated: 2026/02/06 14:39:01 by yabodaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static int	pipe_parent(int *pipefd, int in_fd)
 	return (pipefd[0]);
 }
 
-void	pipe_exec(t_cmd *cmd, char **envp)
+void	pipe_exec(t_cmd *cmd, char ***envp)
 {
 	int		pipefd[2];
 	pid_t	pid;

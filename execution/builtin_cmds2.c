@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin_utils2.c                                   :+:      :+:    :+:   */
+/*   builtin_cmds2.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yabodaya <yabodaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/31 01:22:43 by yabodaya          #+#    #+#             */
-/*   Updated: 2026/01/31 01:23:18 by yabodaya         ###   ########.fr       */
+/*   Updated: 2026/02/06 14:30:38 by yabodaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,29 +21,29 @@ void	pwd_bi(t_cmd *cmd)
 	{
 		write(STDOUT_FILENO, buf, ft_strlen(buf));
 		write(STDOUT_FILENO, "\n", 1);
-		g_exit_status = 0;
+		g_last_exit_status = 0;
 	}
 	else
 	{
 		perror("pwd");
-		g_exit_status = 1;
+		g_last_exit_status = 1;
 	}
 }
 
 void	cd_bi(t_cmd *cmd)
 {
-	if (!cmd->argv[1])
+	if (!cmd->args[1])
 	{
-		g_exit_status = 0;
+		g_last_exit_status = 0;
 		return ;
 	}
-	if (chdir(cmd->argv[1]) == -1)
+	if (chdir(cmd->args[1]) == -1)
 	{
 		perror("cd");
-		g_exit_status = 1;
+		g_last_exit_status = 1;
 	}
 	else
-		g_exit_status = 0;
+		g_last_exit_status = 0;
 }
 
 void	echo_bi(t_cmd *cmd)
@@ -53,19 +53,19 @@ void	echo_bi(t_cmd *cmd)
 
 	i = 1;
 	newline = 1;
-	if (cmd->argv[1] && ft_strcmp(cmd->argv[1], "-n") == 0)
+	if (cmd->args[1] && ft_strcmp(cmd->args[1], "-n") == 0)
 	{
 		newline = 0;
 		i++;
 	}
-	while (cmd->argv[i])
+	while (cmd->args[i])
 	{
-		write (STDOUT_FILENO, cmd->argv[i], ft_strlen(cmd->argv[i]));
-		if (cmd->argv[i + 1])
+		write (STDOUT_FILENO, cmd->args[i], ft_strlen(cmd->args[i]));
+		if (cmd->args[i + 1])
 			write (STDOUT_FILENO, " ", 1);
 		i++;
 	}
 	if (newline)
 		write (STDOUT_FILENO, "\n", 1);
-	g_exit_status = 0;
+	g_last_exit_status = 0;
 }
