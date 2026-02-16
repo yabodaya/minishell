@@ -18,10 +18,10 @@
 # include <stdlib.h>
 # include "libft/libft.h"
 # include <sys/types.h>
-# include <sys/wait.h>
+// # include <sys/wait.h>
 # include <signal.h>
-# include <readline/readline.h>
-# include <readline/history.h>
+// # include <readline/readline.h>
+// # include <readline/history.h>
 
 typedef struct s_cmd
 {
@@ -68,6 +68,7 @@ typedef struct s_parser
 }	t_parser;
 
 extern int	g_last_exit_status;
+int			is_builtin(t_cmd *cmd);
 void		exec_builtin(t_cmd	*cmd, char ***envp);
 void		exec_cmd(t_cmd *cmd, char **envp);
 int			apply_redirections(t_cmd *cmd);

@@ -31,8 +31,8 @@ static int	is_numeric(char *s)
 	i = 0;
 	if (s[i] == '+' || s[i] == '-')
 		i++;
-	while (s[i])
 	{
+	while (s[i])
 		if (!ft_isdigit(s[i]))
 			return (0);
 		i++;

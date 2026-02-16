@@ -14,33 +14,36 @@
 
 static void	pipe_child(t_cmd *cmd, char **envp, int *pipefd, int in_fd)
 {
+	set_signal_child();
+
 	dup2(in_fd, STDIN_FILENO);
 	if (cmd->next)
 		dup2(pipefd[1], STDOUT_FILENO);
+
 	close(pipefd[0]);
 	close(pipefd[1]);
 	if (in_fd != STDIN_FILENO)
 		close(in_fd);
-	if (cmd->is_builtin)
-		exec_builtin(cmd, envp);
+
+	if (setup_redirections(cmd))
+		exit(1);
+
+	if (is_builtin(cmd))
+	{
+		exec_builtin_core(cmd, envp);
+		exit(g_last_exit_status);
+	}
 	else
 		child_exec(cmd, envp);
-	exit(0);
-}
-
-static int	pipe_parent(int *pipefd, int in_fd)
-{
-	close(pipefd[1]);
-	if (in_fd != STDIN_FILENO)
-		close(in_fd);
-	return (pipefd[0]);
 }
 
 void	pipe_exec(t_cmd *cmd, char ***envp)
 {
 	int		pipefd[2];
-	pid_t	pid;
 	int		in_fd;
+	pid_t	pid;
+	pid_t	last_pid;
+	int		status;
 
 	in_fd = STDIN_FILENO;
 	while (cmd)
@@ -49,11 +52,24 @@ void	pipe_exec(t_cmd *cmd, char ***envp)
 			return ;
 		pid = fork();
 		if (pid == 0)
-			pipe_child(cmd, envp, pipefd, in_fd);
-		else if (pid > 0)
-			in_fd = pipe_parent(pipefd, in_fd);
+			pipe_child(cmd, *envp, pipefd, in_fd);
+		else
+		{
+			close(pipefd[1]);
+			if (in_fd != STDIN_FILENO)
+				close(in_fd);
+			in_fd = pipefd[0];
+			last_pid = pid;
+		}
 		cmd = cmd->next;
 	}
+
+	waitpid(last_pid, &status, 0);
+	if (WIFEXITED(status))
+		g_last_exit_status = WEXITSTATUS(status);
+	else if (WIFSIGNALED(status))
+		g_last_exit_status = 128 + WTERMSIG(status);
+
 	while (wait(NULL) > 0)
 		;
 }

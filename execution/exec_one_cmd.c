@@ -33,7 +33,8 @@ static void	child_exec(t_cmd *cmd, char **envp)
 {
 	char	*path;
 
-	if (apply_redirections(cmd))
+	set_signal_child();
+	if (setup_redirections(cmd))
 		exit(1);
 	path = get_path(cmd->args[0], envp);
 	if (!path)
